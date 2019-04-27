@@ -7,15 +7,26 @@
 //
 
 import UIKit
+import UserNotifications
 
+// Needed to adopt to UNUserNotificationCenterDelegate in order to show notifications when the user is in the app.
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Want to set the delegate of the notifacation center equal to self
+        let center = UNUserNotificationCenter.current()
+        let options : UNAuthorizationOptions = [.alert, .sound]
+        center.requestAuthorization(options: options) {
+            (granted, error) in
+            if !granted {
+                print("Notification Error: Check appDelegate")
+            }
+        }
+       
         return true
     }
 

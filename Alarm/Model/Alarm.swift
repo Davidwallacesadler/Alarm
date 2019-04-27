@@ -8,7 +8,8 @@
 
 import Foundation
 
-class Alarm : Equatable {
+// Codable -- for coding and decoding stuff for storage/ archiving
+class Alarm : Equatable, Codable {
     
     // MARK: - PROTOCOL STUBS
     
@@ -23,7 +24,20 @@ class Alarm : Equatable {
     var fireDate: Date
     var name: String
     var enabled: Bool
-    //let uuid: String
+    var uuid: String {
+        get {
+            let alphabet = Array<Any>.generateAlphabetArray()
+            var i = 0
+            var alarmID = ""
+            while i < 3 {
+                let randomInteger = Int.random(in: 0...23)
+                alarmID.append(alphabet[randomInteger])
+                alarmID.append("\(randomInteger)")
+                i += 1
+            }
+            return alarmID
+        }
+    }
     
     // MARK: - COMPUTED PROPERTIES
     
@@ -31,7 +45,7 @@ class Alarm : Equatable {
         get {
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = .short
-            dateFormatter.dateStyle = .short
+            dateFormatter.dateStyle = .none
             return dateFormatter.string(from: fireDate)
         }
     }

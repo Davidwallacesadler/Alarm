@@ -23,6 +23,11 @@ class AlarmListTableViewController: UITableViewController, SwitchTableViewCellDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -60,7 +65,7 @@ class AlarmListTableViewController: UITableViewController, SwitchTableViewCellDe
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            AlarmController.shared.alarms.remove(at: indexPath.row)
+            AlarmController.shared.deleteAlarm(targetAlarm: AlarmController.shared.alarms[indexPath.row])
             tableView.deleteRows(at: [indexPath], with: .fade)
         }    
     }
