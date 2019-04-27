@@ -73,7 +73,7 @@ class AlarmDetailTableViewController: UITableViewController {
     @IBAction func saveButtonPressed(_ sender: Any) {
         guard let alarmName = alarmTitleTextField.text else { return }
         if let alarm = self.alarm {
-            AlarmController.shared.updateAlarm(alarm: alarm, fireDate: alarmTimePicker.date, name: alarmName, enabled: alarmIsOn)
+            AlarmController.shared.updateAlarm(alarm: alarm, fireDate: alarmTimePicker.date, name: alarmName, enabled: alarm.enabled)
         } else {
             AlarmController.shared.addAlarm(fireDate: alarmTimePicker.date, name: alarmName, enabled: alarmIsOn)
         }

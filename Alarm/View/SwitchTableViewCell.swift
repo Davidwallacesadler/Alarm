@@ -32,7 +32,7 @@ class SwitchTableViewCell: UITableViewCell {
     
     // MARK: - Actions
     
-    @IBAction func switchValueChanged(_ sender: Any) {
+    @IBAction func switchValueChanged(_ sender: UISwitch!) {
         guard let checkDelegate = delegate else { return }
         checkDelegate.switchCellSwitchValueChanged(cell: self)
     }
@@ -45,20 +45,4 @@ class SwitchTableViewCell: UITableViewCell {
         guard let enabled = alarm?.enabled else { return }
         alarmSwitch.isOn = enabled
     }
-    
-    
-    
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

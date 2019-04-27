@@ -51,7 +51,6 @@
                                             <rect key="frame" x="255" y="34.5" width="51" height="31"/>
                                             <connections>
                                                 <action selector="switchValueChanged:" destination="80I-yQ-STu" eventType="valueChanged" id="4CW-GA-BjX"/>
-                                                <action selector="toggleSwtich:" destination="80I-yQ-STu" eventType="valueChanged" id="Ca3-Eq-A9b"/>
                                             </connections>
                                         </switch>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alarm Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JFx-0L-508">
