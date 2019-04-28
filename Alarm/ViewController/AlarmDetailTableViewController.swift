@@ -61,10 +61,12 @@ class AlarmDetailTableViewController: UITableViewController {
     @IBAction func activationButtonPressed(_ sender: Any) {
         if alarmIsOn == true {
             alarmIsOn = false
+            alarm?.enabled = alarmIsOn
             activationButton.setTitle("OFF", for: .normal)
             activationButton.backgroundColor = UIColor.red
         } else {
             alarmIsOn = true
+            alarm?.enabled = alarmIsOn
             activationButton.setTitle("ON", for: .normal)
             activationButton.backgroundColor = UIColor.green
         }
