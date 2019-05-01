@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AlarmDetailTableViewController: UITableViewController {
+class AlarmDetailTableViewController: UITableViewController, UIGestureRecognizerDelegate {
     
     // MARK: - Internal Properties
     
@@ -24,7 +24,7 @@ class AlarmDetailTableViewController: UITableViewController {
     
     private func updateViews() {
         guard let selectedAlarm = alarm else {
-            //???  use alarmIsON -- see step 3 in "Wire up the Alarm Detail Table View"
+            // Default to ON state
             activationButton.titleLabel?.text = "ON"
             activationButton.backgroundColor = UIColor.green
             return
@@ -44,11 +44,16 @@ class AlarmDetailTableViewController: UITableViewController {
 
     // MARK: - View Lifecycle
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // MARK: - Tap Gesture Regcognizer
+        
+        // Acts as a resign first responder for the 
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
-    
     
     // MARK: - Outlets
     

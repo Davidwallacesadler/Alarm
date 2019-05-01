@@ -8,38 +8,25 @@
 
 import Foundation
 
-// Codable -- for coding and decoding stuff for storage/ archiving
+// Codable -- for coding and decoding stuff for storage/archiving
 class Alarm : Equatable, Codable {
     
-    // MARK: - PROTOCOL STUBS
-    
+    // MARK: - Protocol Methods
+
     static func == (lhs: Alarm, rhs: Alarm) -> Bool {
         return lhs.fireDate == rhs.fireDate &&
                lhs.name == rhs.name &&
                lhs.enabled == rhs.enabled
     }
     
-    // MARK: - STORED PROPERTIES
+    // MARK: - Stored Properties
     
     var fireDate: Date
     var name: String
     var enabled: Bool
-    var uuid: String {
-        get {
-            let alphabet = Array<Any>.generateAlphabetArray()
-            var i = 0
-            var alarmID = ""
-            while i < 3 {
-                let randomInteger = Int.random(in: 0...23)
-                alarmID.append(alphabet[randomInteger])
-                alarmID.append("\(randomInteger)")
-                i += 1
-            }
-            return alarmID
-        }
-    }
+    var uuid: String
     
-    // MARK: - COMPUTED PROPERTIES
+    // MARK: - Computed Properties
     
     var fireTimeAsString: String {
         get {
@@ -50,11 +37,12 @@ class Alarm : Equatable, Codable {
         }
     }
     
-    // MARK: - INITIALIZER
+    // MARK: - Initializer
     
-    init(fireDate: Date, name: String, enabled: Bool) {
+    init(fireDate: Date, name: String, enabled: Bool, uuid: String) {
         self.fireDate = fireDate
         self.name = name
         self.enabled = enabled
+        self.uuid = uuid
     }
 }

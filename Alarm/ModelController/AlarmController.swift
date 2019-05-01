@@ -9,39 +9,6 @@
 import Foundation
 import UserNotifications
 
-protocol AlarmScheduler {
-    func scheduleUserNotifications(for alarm: Alarm)
-    func cancelUserNotifications(for alarm: Alarm)
-}
-
-extension AlarmScheduler {
-    // Provide defualt implementations of the alarmScheduler methods
-    // This makes it so we can get these functions for every class that confroms to AlarmScheduler
-    // TODO: - Think of how to apply this to the Dice App 3D calculations
-    func scheduleUserNotifications(for alarm: Alarm) {
-        let content = UNMutableNotificationContent()
-        content.title = "Alarm"
-        content.body = "Your \(alarm.name) alarm is going off!"
-        content.sound = UNNotificationSound.default
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month, .day], from: alarm.fireDate)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
-        let center = UNUserNotificationCenter.current()
-        center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-                print("There was an error scheduling the notification: \(error)")
-            }
-        })
-    }
-    
-    func cancelUserNotifications(for alarm: Alarm) {
-        let alarmID = alarm.uuid
-        let userNotifications = UNUserNotificationCenter.current()
-        userNotifications.removePendingNotificationRequests(withIdentifiers: [alarmID])
-    }
-}
-
 class AlarmController : AlarmScheduler {
     
     // MARK: - Shared Instance
@@ -51,14 +18,26 @@ class AlarmController : AlarmScheduler {
     // MARK: - Internal Properties
     
     var alarms: [Alarm] = []
-    let alphabet = Array<Any>.generateAlphabetArray()
     
     // MARK: - CRUD
     
     func addAlarm(fireDate: Date, name: String, enabled: Bool) {
-        let newAlarm = Alarm(fireDate: fireDate, name: name, enabled: enabled)
+        var uuid: String {
+                let alphabet = Array<Any>.alaphabetArray
+                var i = 0
+                var alarmID = ""
+                while i < 3 {
+                    let randomInteger = Int.random(in: 0...23)
+                    alarmID.append(alphabet[randomInteger])
+                    alarmID.append("\(randomInteger)")
+                    i += 1
+                }
+                return alarmID
+            }
+        let newAlarm = Alarm(fireDate: fireDate, name: name, enabled: enabled, uuid: uuid)
         alarms.append(newAlarm)
-        print("alarm was given id of \(newAlarm.uuid)")
+        scheduleUserNotifications(for: newAlarm)
+        print("Alarm '\(newAlarm.name)', uuid: \(newAlarm.uuid), fireDate: \(newAlarm.fireTimeAsString), enabled: \(newAlarm.enabled)")
         saveToPersistentStorage()
     }
     
@@ -66,12 +45,14 @@ class AlarmController : AlarmScheduler {
         alarm.fireDate = fireDate
         alarm.name = name
         alarm.enabled = enabled
+        scheduleUserNotifications(for: alarm)
         saveToPersistentStorage()
     }
     
     func deleteAlarm(targetAlarm: Alarm) {
         guard let index = alarms.firstIndex(of: targetAlarm) else { return }
         alarms.remove(at: index)
+        cancelUserNotifications(for: targetAlarm)
         saveToPersistentStorage()
     }
     
@@ -122,5 +103,40 @@ class AlarmController : AlarmScheduler {
             print("There was an error when loading the file: \(error)")
             return
         }
+    }
+}
+
+// MARK: - AlarmScheduler protocol/extension
+
+protocol AlarmScheduler {
+    func scheduleUserNotifications(for alarm: Alarm)
+    func cancelUserNotifications(for alarm: Alarm)
+}
+
+extension AlarmScheduler {
+    
+    func scheduleUserNotifications(for alarm: Alarm) {
+        let content = UNMutableNotificationContent()
+        content.title = "Alarm"
+        content.body = "Your '\(alarm.name)' alarm is going off!"
+        content.sound = UNNotificationSound.default
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.hour, .minute], from: alarm.fireDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        let request = UNNotificationRequest(identifier: alarm.uuid, content: content, trigger: trigger)
+        let center = UNUserNotificationCenter.current()
+        center.add(request, withCompletionHandler: { (error) in
+            if let error = error {
+                print("There was an error scheduling the notification: \(error)")
+            }
+        })
+        print("UserNotificationCenter added the notification for alarm: '\(alarm.name)' with uuid: \(alarm.uuid)")
+    }
+    
+    func cancelUserNotifications(for alarm: Alarm) {
+        let alarmID = alarm.uuid
+        let userNotifications = UNUserNotificationCenter.current()
+        userNotifications.removePendingNotificationRequests(withIdentifiers: [alarmID])
+        print("Alarm:'\(alarm.name)' with uuid:\(alarmID) had its notification request removed!")
     }
 }
